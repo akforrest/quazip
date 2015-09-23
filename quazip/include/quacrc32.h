@@ -1,3 +1,6 @@
+#ifndef QUACRC32_H
+#define QUACRC32_H
+
 /*
 Copyright (C) 2005-2014 Sergey A. Tachenov
 
@@ -22,31 +25,26 @@ Original ZIP package is copyrighted by Gilles Vollant and contributors,
 see quazip/(un)zip.h files for details. Basically it's the zlib license.
 */
 
-#include "quacrc32.h"
+#include "quachecksum32.h"
 
-#include <QtZlib/zlib.h>
+///CRC32 checksum
+/** \class QuaCrc32 quacrc32.h <quazip/quacrc32.h>
+* This class wrappers the crc32 function with the QuaChecksum32 interface.
+* See QuaChecksum32 for more info.
+*/
+class QUAZIP_EXPORT QuaCrc32 : public QuaChecksum32 {
 
-QuaCrc32::QuaCrc32()
-{
-	reset();
-}
+public:
+	QuaCrc32();
 
-quint32 QuaCrc32::calculate(const QByteArray &data)
-{
-	return crc32( crc32(0L, Z_NULL, 0), (const Bytef*)data.data(), data.size() );
-}
+	quint32 calculate(const QByteArray &data);
 
-void QuaCrc32::reset()
-{
-	checksum = crc32(0L, Z_NULL, 0);
-}
+	void reset();
+	void update(const QByteArray &buf);
+	quint32 value();
 
-void QuaCrc32::update(const QByteArray &buf)
-{
-	checksum = crc32( checksum, (const Bytef*)buf.data(), buf.size() );
-}
+private:
+	quint32 checksum;
+};
 
-quint32 QuaCrc32::value()
-{
-	return checksum;
-}
+#endif //QUACRC32_H
