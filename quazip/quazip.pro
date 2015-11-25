@@ -41,6 +41,12 @@ macx {
     BUILD_PLATFORM = macx
 }
 
+ios {
+    message("Building QuaZIP for iOS")
+    BUILD_PLATFORM = ios
+    #CONFIG += staticlib
+}
+
 symbian {
     message("Building QuaZIP for Symbian")
     BUILD_PLATFORM = symbian
@@ -77,8 +83,8 @@ CONFIG(debug, debug|release) {
 
 BUILD_DIR = $$_PRO_FILE_PWD_
 
-MOC_DIR = $$BUILD_DIR/_$${BUILD_PLATFORM}$${DRMODE}_moc/$${QT_VERSION}/$$TARGET
-OBJECTS_DIR = $$BUILD_DIR/_$${BUILD_PLATFORM}$${DRMODE}_obj/$${QT_VERSION}/$$TARGET
+MOC_DIR = $$BUILD_DIR/_generated/_$${BUILD_PLATFORM}$${DRMODE}_moc/$${QT_VERSION}/$$TARGET
+OBJECTS_DIR = $$BUILD_DIR/_generated/_$${BUILD_PLATFORM}$${DRMODE}_obj/$${QT_VERSION}/$$TARGET
 
 DESTDIR = $$OUT_PWD/$${BUILD_PLATFORM}
 
