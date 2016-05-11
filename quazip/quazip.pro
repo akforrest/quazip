@@ -13,7 +13,12 @@ include(quazip.pri)
 
 BUILD_PLATFORM = all
 
-LIBS += -lz
+win32-msvc* {
+    # dont need to link against system zlib when using msvc (?)
+}
+else {
+    LIBS += -lz
+}
 
 android {
     message("Building QuaZIP for Android")
