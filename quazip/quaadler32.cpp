@@ -25,11 +25,7 @@ see quazip/(un)zip.h files for details. Basically it's the zlib license.
 
 #include "quaadler32.h"
 
-#ifdef Q_OS_WIN
-#include <QtZlib/zlib.h>
-#else
 #include <zlib.h>
-#endif
 
 QuaAdler32::QuaAdler32()
 {

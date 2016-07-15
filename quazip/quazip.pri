@@ -1,22 +1,22 @@
-INCLUDEPATH += $$PWD
+INCLUDEPATH += $$PWD/include
 DEPENDPATH += $$PWD
 HEADERS += \
-        $$PWD/crypt.h \
-        $$PWD/ioapi.h \
-        $$PWD/JlCompress.h \
-        $$PWD/quaadler32.h \
-        $$PWD/quachecksum32.h \
-        $$PWD/quacrc32.h \
-        $$PWD/quagzipfile.h \
-        $$PWD/quaziodevice.h \
-        $$PWD/quazipdir.h \
-        $$PWD/quazipfile.h \
-        $$PWD/quazipfileinfo.h \
-        $$PWD/quazip_global.h \
-        $$PWD/quazip.h \
-        $$PWD/quazipnewinfo.h \
-        $$PWD/unzip.h \
-        $$PWD/zip.h
+        $$PWD/include/crypt.h \
+        $$PWD/include/ioapi.h \
+        $$PWD/include/JlCompress.h \
+        $$PWD/include/quaadler32.h \
+        $$PWD/include/quachecksum32.h \
+        $$PWD/include/quacrc32.h \
+        $$PWD/include/quagzipfile.h \
+        $$PWD/include/quaziodevice.h \
+        $$PWD/include/quazipdir.h \
+        $$PWD/include/quazipfile.h \
+        $$PWD/include/quazipfileinfo.h \
+        $$PWD/include/quazip_global.h \
+        $$PWD/include/quazip.h \
+        $$PWD/include/quazipnewinfo.h \
+        $$PWD/include/unzip.h \
+        $$PWD/include/zip.h
 
 SOURCES += $$PWD/qioapi.cpp \
            $$PWD/JlCompress.cpp \

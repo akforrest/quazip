@@ -6,15 +6,63 @@ QT -= gui
 DEFINES += QUAZIP_BUILD
 CONFIG(staticlib): DEFINES += QUAZIP_STATIC
 
-INCLUDEPATH += $$[QT_INSTALL_HEADERS]/QtZlib
+include(qtcompilercheck.pri)
 
 # Input
 include(quazip.pri)
 
 BUILD_PLATFORM = all
+BUILD_DIR = $$_PRO_FILE_PWD_
+
+CONFIG(release, debug|release) {
+    DRMODE = release
+}
+CONFIG(debug, debug|release) {
+    DRMODE = debug
+}
+
+ZLIB_ROOT = $${BUILD_DIR}/zlib
+INCLUDEPATH += $${ZLIB_ROOT}/include
 
 win32-msvc* {
-    # dont need to link against system zlib when using msvc (?)
+    message("Linking local zlib")
+
+    MSVC_VER = $$(VisualStudioVersion)
+
+    equals(MSVC_VER, 14.0){
+        #msvc2015
+        contains(QMAKE_TARGET.arch, x86_64){
+            #64bit
+            LIBS += $${ZLIB_ROOT}/msvc2015_64/$${DRMODE}/zlibwapi.lib
+        }
+        else {
+            #32bit
+            LIBS += $${ZLIB_ROOT}/msvc2015_32/$${DRMODE}/zlibwapi.lib
+        }
+    }
+    equals(MSVC_VER, 12.0){
+        #msvc2013
+        contains(QMAKE_TARGET.arch, x86_64){
+            #64bit
+            LIBS += $${ZLIB_ROOT}/msvc2013_64/$${DRMODE}/zlibwapi.lib
+        }
+        else {
+            #32bit
+            LIBS += $${ZLIB_ROOT}/msvc2015_32/$${DRMODE}/zlibwapi.lib
+            warning(unsupported compiler version MSVC 2013 32Bit)
+        }
+    }
+
+    CONFIG(release, debug|release) {
+        #QMAKE_CXXFLAGS += /MD
+        #QMAKE_LFLAGS += /VERBOSE:LIB
+        #QMAKE_LFLAGS += /NODEFAULTLIB:libcmt.lib
+    }
+    CONFIG(debug, debug|release) {
+        #QMAKE_CXXFLAGS += /MDd
+        QMAKE_LFLAGS += /VERBOSE:LIB
+        #QMAKE_LFLAGS += /NODEFAULTLIB:libcmtd.lib
+    }
 }
 else {
     LIBS += -lz
@@ -79,19 +127,12 @@ symbian {
     }
 }
 
-CONFIG(release, debug|release) {
-    DRMODE = _release
-}
-CONFIG(debug, debug|release) {
-    DRMODE = _debug
-}
+MOC_DIR = $$BUILD_DIR/_generated/_$${BUILD_PLATFORM}_$${DRMODE}_moc/$${QT_VERSION}/$${COMPILER_VERSION}/$$TARGET
+OBJECTS_DIR = $$BUILD_DIR/_generated/_$${BUILD_PLATFORM}_$${DRMODE}_obj/$${QT_VERSION}/$${COMPILER_VERSION}/$$TARGET
 
-BUILD_DIR = $$_PRO_FILE_PWD_
+DESTDIR = $$OUT_PWD/$${QT_VERSION}/$${COMPILER_VERSION}/$${BUILD_PLATFORM}
 
-MOC_DIR = $$BUILD_DIR/_generated/_$${BUILD_PLATFORM}$${DRMODE}_moc/$${QT_VERSION}/$$TARGET
-OBJECTS_DIR = $$BUILD_DIR/_generated/_$${BUILD_PLATFORM}$${DRMODE}_obj/$${QT_VERSION}/$$TARGET
-
-DESTDIR = $$OUT_PWD/$${QT_VERSION}/$${BUILD_PLATFORM}
+message(Destination: $${DESTDIR})
 
 headers.path=$$_PRO_FILE_PWD_/include
 headers.files=$$HEADERS
