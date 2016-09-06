@@ -11,17 +11,7 @@ include(qtcompilercheck.pri)
 # Input
 include(quazip.pri)
 
-BUILD_PLATFORM = all
-BUILD_DIR = $$_PRO_FILE_PWD_
-
-CONFIG(release, debug|release) {
-    DRMODE = release
-}
-CONFIG(debug, debug|release) {
-    DRMODE = debug
-}
-
-ZLIB_ROOT = $${BUILD_DIR}/zlib
+ZLIB_ROOT = $$_PRO_FILE_PWD_/zlib
 INCLUDEPATH += $${ZLIB_ROOT}/include
 
 win32-msvc* {
@@ -70,20 +60,17 @@ else {
 
 android {
     message("Building QuaZIP for Android")
-    BUILD_PLATFORM = android
 
     CONFIG += staticlib
 }
 else {
-unix:!symbian {
-    message("Building QuaZIP for Unix")
-    BUILD_PLATFORM = unix
-}
+    unix:!symbian {
+        message("Building QuaZIP for Unix")
+    }
 }
 
 win32 {
     message("Building QuaZIP for Win32")
-    BUILD_PLATFORM = win
 
     # workaround for qdatetime.h macro bug
     DEFINES += NOMINMAX
@@ -91,18 +78,15 @@ win32 {
 
 macx {
     message("Building QuaZIP for MacX")
-    BUILD_PLATFORM = macx
 }
 
 ios {
     message("Building QuaZIP for iOS")
-    BUILD_PLATFORM = ios
     #CONFIG += staticlib
 }
 
 symbian {
     message("Building QuaZIP for Symbian")
-    BUILD_PLATFORM = symbian
 
     # Note, on Symbian you may run into troubles with LGPL.
     # The point is, if your application uses some version of QuaZip,
@@ -126,11 +110,6 @@ symbian {
         BLD_INF_RULES.prj_exports += "$$header $$exportheaders.path/$$basename(header)"
     }
 }
-
-MOC_DIR = $$BUILD_DIR/_generated/_$${BUILD_PLATFORM}_$${DRMODE}_moc/$${QT_VERSION}/$${COMPILER_VERSION}/$$TARGET
-OBJECTS_DIR = $$BUILD_DIR/_generated/_$${BUILD_PLATFORM}_$${DRMODE}_obj/$${QT_VERSION}/$${COMPILER_VERSION}/$$TARGET
-
-DESTDIR = $$OUT_PWD/$${QT_VERSION}/$${COMPILER_VERSION}/$${BUILD_PLATFORM}
 
 message(Destination: $${DESTDIR})
 
