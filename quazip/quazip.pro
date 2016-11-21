@@ -14,45 +14,45 @@ include(quazip.pri)
 ZLIB_ROOT = $$_PRO_FILE_PWD_/zlib
 INCLUDEPATH += $${ZLIB_ROOT}/include
 
+message(ZLIB ROOT $${ZLIB_ROOT})
+
 win32-msvc* {
     message("Linking local zlib")
 
+    DEFINES += ZLIB_WINAPI
+
     MSVC_VER = $$(VisualStudioVersion)
 
-    equals(MSVC_VER, 14.0){
-        #msvc2015
-        contains(QMAKE_TARGET.arch, x86_64){
-            #64bit
-            LIBS += $${ZLIB_ROOT}/msvc2015_64/$${DRMODE}/zlibwapi.lib
-        }
-        else {
-            #32bit
-            LIBS += $${ZLIB_ROOT}/msvc2015_32/$${DRMODE}/zlibwapi.lib
-        }
-    }
-    equals(MSVC_VER, 12.0){
-        #msvc2013
-        contains(QMAKE_TARGET.arch, x86_64){
-            #64bit
-            LIBS += $${ZLIB_ROOT}/msvc2013_64/$${DRMODE}/zlibwapi.lib
-        }
-        else {
-            #32bit
-            LIBS += $${ZLIB_ROOT}/msvc2015_32/$${DRMODE}/zlibwapi.lib
-            warning(unsupported compiler version MSVC 2013 32Bit)
-        }
+    equals(MSVC_VER, 14.0) {
+        LIBS += -llegacy_stdio_definitions
     }
 
     CONFIG(release, debug|release) {
-        #QMAKE_CXXFLAGS += /MD
-        #QMAKE_LFLAGS += /VERBOSE:LIB
-        #QMAKE_LFLAGS += /NODEFAULTLIB:libcmt.lib
+
+        contains(QMAKE_TARGET.arch, x86_64) {
+            LIBS += -L$${ZLIB_ROOT}/lib64/release
+        }
+        else {
+            LIBS += -L$${ZLIB_ROOT}/lib32/release
+            QMAKE_LFLAGS += /NODEFAULTLIB:libcmt.lib
+        }
+
+        #QMAKE_LFLAGS += /NODEFAULTLIB:libcmt.lib /NODEFAULTLIB:libmsvcrt.lib
     }
     CONFIG(debug, debug|release) {
-        #QMAKE_CXXFLAGS += /MDd
+
+        contains(QMAKE_TARGET.arch, x86_64) {
+            LIBS += -L$${ZLIB_ROOT}/lib64/debug
+        }
+        else {
+            LIBS += -L$${ZLIB_ROOT}/lib32/debug
+        }
+
         QMAKE_LFLAGS += /VERBOSE:LIB
-        #QMAKE_LFLAGS += /NODEFAULTLIB:libcmtd.lib
+        #QMAKE_LFLAGS += /NODEFAULTLIB:libcmtd.lib /NODEFAULTLIB:libmsvcrtd.lib
     }
+
+    LIBS += -lzlibwapi
 }
 else {
     LIBS += -lz
