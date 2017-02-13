@@ -6,6 +6,9 @@ QT -= gui
 DEFINES += QUAZIP_BUILD
 CONFIG(staticlib): DEFINES += QUAZIP_STATIC
 
+message()
+message("----------------- quazip -----------------")
+
 include(qtcompilercheck.pri)
 
 # Input
